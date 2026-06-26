@@ -6,8 +6,6 @@
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
 ![React](https://img.shields.io/badge/React_18-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat-square&logo=angular&logoColor=white)
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-a78bfa?style=flat-square)
-![Atualizado](https://img.shields.io/badge/atualizado-junho%202026-success?style=flat-square)
 
 ---
 
