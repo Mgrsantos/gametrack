@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameTrack — Sua biblioteca de jogos</title>
+  <style>
+    :root {
+      --bg:        #08080f;
+      --bg-card:   #10101a;
+      --bg-card2:  #14141f;
+      --border:    #ffffff12;
+      --border-md: #ffffff22;
+      --purple:    #a78bfa;
+      --purple-dim:#a78bfa22;
+      --purple-mid:#7c5fe6;
+      --text:      #f0f0f5;
+      --muted:     #666680;
+      --muted2:    #444458;
+      --blue:      #378add;
+      --green:     #3da85a;
+      --red-dim:   #e84393;
+      --radius:    12px;
+      --radius-sm: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 32px;
+      border-bottom: 0.5px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: #08080fcc;
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.04em;
+    }
+    .logo span { color: var(--purple); }
+
+    .nav-links { display: flex; gap: 24px; list-style: none; }
+    .nav-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-dropdown { position: relative; }
+
+    .nav-btn {
+      font-size: 13px;
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      background: var(--purple-dim);
+      color: var(--purple);
+      border: 0.5px solid #a78bfa44;
+      cursor: pointer;
+      transition: background .2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-btn:hover { background: #a78bfa33; }
+    .nav-btn .chevron { font-size: 10px; transition: transform .2s; }
+    .nav-btn.open .chevron { transform: rotate(180deg); }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: #13131f;
+      border: 0.5px solid var(--border-md);
+      border-radius: var(--radius);
+      padding: 6px;
+      min-width: 200px;
+      z-index: 200;
+      box-shadow: 0 8px 32px #00000066;
+      animation: fadeIn .15s ease;
+    }
+    .dropdown-menu.open { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background .15s;
+      text-decoration: none;
+    }
+    .dropdown-item:hover { background: #ffffff0a; }
+
+    .dropdown-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .dropdown-name {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .dropdown-genre {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .dropdown-divider {
+      height: 0.5px;
+      background: var(--border);
+      margin: 4px 6px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 72px 24px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse at center, #a78bfa18 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      background: var(--purple-dim);
+      color: var(--purple);
+      border: 0.5px solid #a78bfa33;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 span { color: var(--purple); }
+
+    .hero p {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 420px;
+      margin: 0 auto 32px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      padding: 12px 24px;
+      background: var(--purple);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .btn-primary:hover { background: var(--purple-mid); transform: translateY(-1px); }
+
+    .btn-ghost {
+      padding: 12px 24px;
+      background: transparent;
+      color: var(--muted);
+      border: 0.5px solid var(--border-md);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      cursor: pointer;
+      transition: color .2s, border-color .2s;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: #ffffff44; }
+
+    /* ── STATS ── */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      border-top: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+      margin: 0 32px;
+    }
+
+    .stat-item {
+      padding: 20px 48px;
+      text-align: center;
+      border-right: 0.5px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+
+    .stat-val {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── SEÇÃO BIBLIOTECA ── */
+    section { padding: 48px 32px; }
+
+    .section-eyebrow {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    /* ── GRID DE JOGOS ── */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .game-card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color .25s, transform .2s;
+    }
+    .game-card:hover {
+      border-color: var(--border-md);
+      transform: translateY(-3px);
+    }
+    .game-card.active {
+      border-color: var(--purple);
+    }
+
+    .game-thumb {
+      height: 120px;
+      display: flex;
+      align-items: flex-end;
+      padding: 12px;
+      position: relative;
+    }
+
+    .thumb-gta   { background: linear-gradient(135deg, #0d1b3e 0%, #1a3a6e 60%, #2255a4 100%); }
+    .thumb-miles { background: linear-gradient(135deg, #1a0535 0%, #3b1278 60%, #c0176a44 100%); }
+    .thumb-tlou  { background: linear-gradient(135deg, #0a1a08 0%, #1c3d18 60%, #2d6128 100%); }
+
+    .game-genre-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 5px;
+      background: #00000055;
+      color: #ccc;
+      border: 0.5px solid #ffffff22;
+      backdrop-filter: blur(4px);
+    }
+
+    .game-info {
+      padding: 14px 16px 16px;
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .game-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .game-platform {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .hours-badge {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--purple);
+      background: var(--purple-dim);
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width .6s ease;
+    }
+
+    .fill-gta   { background: linear-gradient(90deg, #378add, #5baee8); }
+    .fill-miles { background: linear-gradient(90deg, #a78bfa, #c4a7fb); }
+    .fill-tlou  { background: linear-gradient(90deg, #3da85a, #56c874); }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 0.5px solid var(--border);
+    }
+
+    .session-info {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .card-chevron {
+      font-size: 12px;
+      color: var(--muted);
+      transition: transform .2s;
+    }
+    .game-card.active .card-chevron { transform: rotate(180deg); color: var(--purple); }
+
+    /* ── PAINEL DE DETALHE ── */
+    .detail-panel {
+      display: none;
+      margin-top: 12px;
+      background: var(--bg-card2);
+      border: 0.5px solid var(--border-md);
+      border-radius: var(--radius);
+      overflow: hidden;
+      animation: slideDown .25s ease;
+    }
+
+    .detail-panel.open { display: block; }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-inner { padding: 24px; }
+
+    .detail-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .detail-stat {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+    }
+
+    .detail-stat-val {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .detail-stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── MISSÕES / CONQUISTAS ── */
+    .missions-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .mission-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .mission-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      transition: border-color .2s;
+    }
+    .mission-item:hover { border-color: var(--border-md); }
+
+    .mission-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .icon-gta   { background: #378add22; }
+    .icon-miles { background: #a78bfa22; }
+    .icon-tlou  { background: #3da85a22; }
+
+    .mission-info { flex: 1; }
+
+    .mission-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .mission-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .mission-status {
+      font-size: 10px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .status-done {
+      background: #3da85a22;
+      color: #3da85a;
+      border: 0.5px solid #3da85a33;
+    }
+
+    .status-ongoing {
+      background: #a78bfa22;
+      color: var(--purple);
+      border: 0.5px solid #a78bfa33;
+    }
+
+    /* ── SEÇÃO NÍVEIS ── */
+    .levels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .level-card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color .2s;
+    }
+    .level-card:hover { border-color: var(--border-md); }
+
+    .level-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .level-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .level-game { font-size: 13px; font-weight: 600; color: var(--text); }
+    .level-rank { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .xp-bar-wrap { margin-bottom: 12px; }
+
+    .xp-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .xp-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .xp-fill {
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    .level-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .level-badge {
+      font-size: 10px;
+      padding: 3px 9px;
+      border-radius: 5px;
+      background: var(--bg-card2);
+      color: var(--muted);
+      border: 0.5px solid var(--border);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 32px;
+      border-top: 0.5px solid var(--border);
+      font-size: 12px;
+      color: var(--muted2);
+    }
+
+    footer span { color: var(--purple); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 14px 16px; }
+      .nav-links { display: none; }
+      section { padding: 36px 16px; }
+      .stats-bar { margin: 0 16px; }
+      .stat-item { padding: 16px 20px; }
+      .detail-stats { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">game<span>track</span></div>
+    <ul class="nav-links">
+      <li><a href="#biblioteca">Biblioteca</a></li>
+      <li><a href="#niveis">Níveis</a></li>
+      <li><a href="#sobre">Sobre</a></li>
+    </ul>
+    <div class="nav-dropdown">
+      <button class="nav-btn" id="nav-btn" onclick="toggleDropdown()" aria-haspopup="true" aria-expanded="false">
+        Meus Jogos <span class="chevron">▼</span>
+      </button>
+      <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <a class="dropdown-item" href="#biblioteca" onclick="closeDropdown()">
+          <div class="dropdown-icon" style="background:#378add22;">🏙️</div>
+          <div><div class="dropdown-name">GTA V Online</div><div class="dropdown-genre">Mundo aberto</div></div>
+        </a>
+        <a class="dropdown-item" href="#biblioteca" onclick="closeDropdown()">
+          <div class="dropdown-icon" style="background:#a78bfa22;">🕷️</div>
+          <div><div class="dropdown-name">Spider-Man: Miles Morales</div><div class="dropdown-genre">Ação / Aventura</div></div>
+        </a>
+        <a class="dropdown-item" href="#biblioteca" onclick="closeDropdown()">
+          <div class="dropdown-icon" style="background:#3da85a22;">🌿</div>
+          <div><div class="dropdown-name">The Last of Us</div><div class="dropdown-genre">Survival / Drama</div></div>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#biblioteca" onclick="closeDropdown()">
+          <div class="dropdown-icon" style="background:#e84a9322;">🏠</div>
+          <div><div class="dropdown-name">The Sims 4</div><div class="dropdown-genre">Simulação</div></div>
+        </a>
+        <a class="dropdown-item" href="#biblioteca" onclick="closeDropdown()">
+          <div class="dropdown-icon" style="background:#ef9f2722;">⚡</div>
+          <div><div class="dropdown-name">Fortnite</div><div class="dropdown-genre">Battle Royale</div></div>
+        </a>
+        <a class="dropdown-item" href="#biblioteca" onclick="closeDropdown()">
+          <div class="dropdown-icon" style="background:#378add22;">🧱</div>
+          <div><div class="dropdown-name">LEGO Batman</div><div class="dropdown-genre">Aventura / Plataforma</div></div>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-badge">
+      🎮 Sua biblioteca pessoal de jogos
+    </div>
+    <p>Horas jogadas, missões concluídas e progresso — tudo em um só lugar, do seu jeito.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('biblioteca').scrollIntoView({behavior:'smooth'})">Ver minha biblioteca</button>
+      <button class="btn-ghost" onclick="document.getElementById('niveis').scrollIntoView({behavior:'smooth'})">Ver níveis</button>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-val">6</div>
+      <div class="stat-label">Jogos</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">847h</div>
+      <div class="stat-label">Total jogado</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">2</div>
+      <div class="stat-label">Concluídos</div>
+    </div>
+  </div>
+
+  <!-- BIBLIOTECA -->
+  <section id="biblioteca">
+    <div class="section-eyebrow">Sua coleção</div>
+    <div class="section-title">Biblioteca de jogos</div>
+
+    <div class="games-grid">
+
+      <!-- GTA V -->
+      <div>
+        <div class="game-card" id="card-gta" onclick="toggleDetail('gta')" aria-expanded="false">
+          <div class="game-thumb thumb-gta">
+            <span class="game-genre-badge">Mundo aberto</span>
+          </div>
+          <div class="game-info">
+            <div class="game-header">
+              <div>
+                <div class="game-title">GTA V Online</div>
+                <div class="game-platform">PlayStation / PC</div>
+              </div>
+              <div class="hours-badge">620h</div>
+            </div>
+            <div class="progress-label">
+              <span>Progresso geral</span>
+              <span>78%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill fill-gta" style="width: 78%"></div>
+            </div>
+            <div class="card-footer">
+              <div class="session-info">⏱ ~6h por dia · fins de semana</div>
+              <div class="card-chevron">▼</div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-panel" id="detail-gta">
+          <div class="detail-inner">
+            <div class="detail-stats">
+              <div class="detail-stat">
+                <div class="detail-stat-val">620h</div>
+                <div class="detail-stat-label">Horas jogadas</div>
+              </div>
+              <div class="detail-stat">
+                <div class="detail-stat-val">78%</div>
+                <div class="detail-stat-label">Progresso</div>
+              </div>
+              <div class="detail-stat">
+                <div class="detail-stat-val">FDS</div>
+                <div class="detail-stat-label">Sessões</div>
+              </div>
+            </div>
+            <div class="missions-title">Missões em destaque</div>
+            <div class="mission-list">
+              <div class="mission-item">
+                <div class="mission-icon icon-gta">🎰</div>
+                <div class="mission-info">
+                  <div class="mission-name">Missões do Cassino</div>
+                  <div class="mission-sub">The Diamond Casino & Resort</div>
+                </div>
+                <div class="mission-status status-done">Concluída</div>
+              </div>
+              <div class="mission-item">
+                <div class="mission-icon icon-gta">🏆</div>
+                <div class="mission-info">
+                  <div class="mission-name">Ouro Maciço</div>
+                  <div class="mission-sub">Conquista de ouro em missões</div>
+                </div>
+                <div class="mission-status status-ongoing">Em andamento</div>
+              </div>
+              <div class="mission-item">
+                <div class="mission-icon icon-gta">🏢</div>
+                <div class="mission-info">
+                  <div class="mission-name">Compra de Facções</div>
+                  <div class="mission-sub">Expansão de negócios no GTA Online</div>
+                </div>
+                <div class="mission-status status-ongoing">Em andamento</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SPIDER-MAN MILES -->
+      <div>
+        <div class="game-card" id="card-miles" onclick="toggleDetail('miles')" aria-expanded="false">
+          <div class="game-thumb thumb-miles">
+            <span class="game-genre-badge">Ação / Aventura</span>
+          </div>
+          <div class="game-info">
+            <div class="game-header">
+              <div>
+                <div class="game-title">Spider-Man: Miles Morales</div>
+                <div class="game-platform">PlayStation</div>
+              </div>
+              <div class="hours-badge">142h</div>
+            </div>
+            <div class="progress-label">
+              <span>Progresso geral</span>
+              <span>55%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill fill-miles" style="width: 55%"></div>
+            </div>
+            <div class="card-footer">
+              <div class="session-info">⏱ ~4h · sextas-feiras</div>
+              <div class="card-chevron">▼</div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-panel" id="detail-miles">
+          <div class="detail-inner">
+            <div class="detail-stats">
+              <div class="detail-stat">
+                <div class="detail-stat-val">142h</div>
+                <div class="detail-stat-label">Horas jogadas</div>
+              </div>
+              <div class="detail-stat">
+                <div class="detail-stat-val">55%</div>
+                <div class="detail-stat-label">Progresso</div>
+              </div>
+              <div class="detail-stat">
+                <div class="detail-stat-val">6ª</div>
+                <div class="detail-stat-label">Sessões</div>
+              </div>
+            </div>
+            <div class="missions-title">Missões em destaque</div>
+            <div class="mission-list">
+              <div class="mission-item">
+                <div class="mission-icon icon-miles">⚖️</div>
+                <div class="mission-info">
+                  <div class="mission-name">Justiça Suprema</div>
+                  <div class="mission-sub">Missão principal — ato final</div>
+                </div>
+                <div class="mission-status status-done">Concluída</div>
+              </div>
+              <div class="mission-item">
+                <div class="mission-icon icon-miles">🏘️</div>
+                <div class="mission-info">
+                  <div class="mission-name">Pelo Bairro</div>
+                  <div class="mission-sub">Missões comunitárias de Harlem</div>
+                </div>
+                <div class="mission-status status-done">Concluída</div>
+              </div>
+              <div class="mission-item">
+                <div class="mission-icon icon-miles">🗺️</div>
+                <div class="mission-info">
+                  <div class="mission-name">Caçador de Tesouros</div>
+                  <div class="mission-sub">Colecionáveis e segredos do mapa</div>
+                </div>
+                <div class="mission-status status-ongoing">Em andamento</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THE LAST OF US -->
+      <div>
+        <div class="game-card" id="card-tlou" onclick="toggleDetail('tlou')" aria-expanded="false">
+          <div class="game-thumb thumb-tlou">
+            <span class="game-genre-badge">Survival / Drama</span>
+          </div>
+          <div class="game-info">
+            <div class="game-header">
+              <div>
+                <div class="game-title">The Last of Us</div>
+                <div class="game-platform">PlayStation / PC</div>
+              </div>
+              <div class="hours-badge">85h</div>
+            </div>
+            <div class="progress-label">
+              <span>Progresso geral</span>
+              <span>35%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill fill-tlou" style="width: 35%"></div>
+            </div>
+            <div class="card-footer">
+              <div class="session-info">⏱ ~4h · sábados à tarde</div>
+              <div class="card-chevron">▼</div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-panel" id="detail-tlou">
+          <div class="detail-inner">
+            <div class="detail-stats">
+              <div class="detail-stat">
+                <div class="detail-stat-val">85h</div>
+                <div class="detail-stat-label">Horas jogadas</div>
+              </div>
+              <div class="detail-stat">
+                <div class="detail-stat-val">35%</div>
+                <div class="detail-stat-label">Progresso</div>
+              </div>
+              <div class="detail-stat">
+                <div class="detail-stat-val">Sáb</div>
+                <div class="detail-stat-label">Sessões</div>
+              </div>
+            </div>
+            <div class="missions-title">Missões em destaque</div>
+            <div class="mission-list">
+              <div class="mission-item">
+                <div class="mission-icon icon-tlou">🌿</div>
+                <div class="mission-info">
+                  <div class="mission-name">It Can't Be for Nothing</div>
+                  <div class="mission-sub">Capítulo final — desfecho de Ellie</div>
+                </div>
+                <div class="mission-status status-ongoing">Em andamento</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THE SIMS 4 -->
+      <div>
+        <div class="game-card" id="card-sims" onclick="toggleDetail('sims')" aria-expanded="false">
+          <div class="game-thumb" style="background: linear-gradient(135deg, #1a0a2a 0%, #3d1f6e 50%, #c0176a33 100%);">
+            <span class="game-genre-badge">Simulação</span>
+          </div>
+          <div class="game-info">
+            <div class="game-header">
+              <div>
+                <div class="game-title">The Sims 4</div>
+                <div class="game-platform">PC / Console</div>
+              </div>
+              <div class="hours-badge" style="color:#e84a93; background:#e84a9322;">—</div>
+            </div>
+            <div class="progress-label"><span>Progresso geral</span><span>—</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="background: linear-gradient(90deg, #e84a93, #f07ab3); width: 20%"></div></div>
+            <div class="card-footer">
+              <div class="session-info">🏠 Simulação de vida</div>
+              <div class="card-chevron">▼</div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-panel" id="detail-sims">
+          <div class="detail-inner">
+            <div class="detail-stats">
+              <div class="detail-stat"><div class="detail-stat-val">—</div><div class="detail-stat-label">Horas jogadas</div></div>
+              <div class="detail-stat"><div class="detail-stat-val">—</div><div class="detail-stat-label">Progresso</div></div>
+              <div class="detail-stat"><div class="detail-stat-val">PC</div><div class="detail-stat-label">Plataforma</div></div>
+            </div>
+            <div class="missions-title">Sobre o jogo</div>
+            <div class="mission-list">
+              <div class="mission-item">
+                <div class="mission-icon" style="background:#e84a9322;">🏠</div>
+                <div class="mission-info"><div class="mission-name">The Sims 4</div><div class="mission-sub">Simulação de vida — crie e controle pessoas</div></div>
+                <div class="mission-status status-ongoing">Jogando</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORTNITE -->
+      <div>
+        <div class="game-card" id="card-fortnite" onclick="toggleDetail('fortnite')" aria-expanded="false">
+          <div class="game-thumb" style="background: linear-gradient(135deg, #0a1a2a 0%, #0d3a5e 50%, #ef9f2733 100%);">
+            <span class="game-genre-badge">Battle Royale</span>
+          </div>
+          <div class="game-info">
+            <div class="game-header">
+              <div>
+                <div class="game-title">Fortnite</div>
+                <div class="game-platform">PC / PlayStation / Mobile</div>
+              </div>
+              <div class="hours-badge" style="color:#ef9f27; background:#ef9f2722;">—</div>
+            </div>
+            <div class="progress-label"><span>Progresso geral</span><span>—</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="background: linear-gradient(90deg, #ef9f27, #f7c75a); width: 20%"></div></div>
+            <div class="card-footer">
+              <div class="session-info">⚡ Battle Royale</div>
+              <div class="card-chevron">▼</div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-panel" id="detail-fortnite">
+          <div class="detail-inner">
+            <div class="detail-stats">
+              <div class="detail-stat"><div class="detail-stat-val">—</div><div class="detail-stat-label">Horas jogadas</div></div>
+              <div class="detail-stat"><div class="detail-stat-val">—</div><div class="detail-stat-label">Progresso</div></div>
+              <div class="detail-stat"><div class="detail-stat-val">PC</div><div class="detail-stat-label">Plataforma</div></div>
+            </div>
+            <div class="missions-title">Sobre o jogo</div>
+            <div class="mission-list">
+              <div class="mission-item">
+                <div class="mission-icon" style="background:#ef9f2722;">⚡</div>
+                <div class="mission-info"><div class="mission-name">Fortnite</div><div class="mission-sub">Battle Royale — último a sobreviver vence</div></div>
+                <div class="mission-status status-ongoing">Jogando</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEGO BATMAN -->
+      <div>
+        <div class="game-card" id="card-lego" onclick="toggleDetail('lego')" aria-expanded="false">
+          <div class="game-thumb" style="background: linear-gradient(135deg, #0a0f1a 0%, #1a2a4a 50%, #378add33 100%);">
+            <span class="game-genre-badge">Aventura / Plataforma</span>
+          </div>
+          <div class="game-info">
+            <div class="game-header">
+              <div>
+                <div class="game-title">LEGO Batman</div>
+                <div class="game-platform">PC / Console</div>
+              </div>
+              <div class="hours-badge" style="color:#378add; background:#378add22;">—</div>
+            </div>
+            <div class="progress-label"><span>Progresso geral</span><span>—</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="background: linear-gradient(90deg, #378add, #5baee8); width: 20%"></div></div>
+            <div class="card-footer">
+              <div class="session-info">🧱 Aventura em blocos</div>
+              <div class="card-chevron">▼</div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-panel" id="detail-lego">
+          <div class="detail-inner">
+            <div class="detail-stats">
+              <div class="detail-stat"><div class="detail-stat-val">—</div><div class="detail-stat-label">Horas jogadas</div></div>
+              <div class="detail-stat"><div class="detail-stat-val">—</div><div class="detail-stat-label">Progresso</div></div>
+              <div class="detail-stat"><div class="detail-stat-val">PC</div><div class="detail-stat-label">Plataforma</div></div>
+            </div>
+            <div class="missions-title">Sobre o jogo</div>
+            <div class="mission-list">
+              <div class="mission-item">
+                <div class="mission-icon" style="background:#378add22;">🧱</div>
+                <div class="mission-info"><div class="mission-name">LEGO Batman</div><div class="mission-sub">Aventura e plataforma no universo DC</div></div>
+                <div class="mission-status status-ongoing">Jogando</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NÍVEIS -->
+  <section id="niveis" style="border-top: 0.5px solid var(--border);">
+    <div class="section-eyebrow">Jogos que você joga de verdade</div>
+    <div class="section-title">Seus níveis</div>
+
+    <div class="levels-grid">
+
+      <!-- Nível GTA -->
+      <div class="level-card">
+        <div class="level-header">
+          <div class="level-avatar" style="background:#378add22; font-size:20px;">🏙️</div>
+          <div>
+            <div class="level-game">GTA V Online</div>
+            <div class="level-rank">Criminoso de Alto Escalão</div>
+          </div>
+        </div>
+        <div class="xp-bar-wrap">
+          <div class="xp-labels">
+            <span>Nível 420</span>
+            <span style="color: #378add;">80% até próximo</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill fill-gta" style="width: 80%"></div>
+          </div>
+        </div>
+        <div class="level-badges">
+          <div class="level-badge">🎰 Cassino desbloqueado</div>
+          <div class="level-badge">🏢 3 facções ativas</div>
+          <div class="level-badge">💰 GTA$ 10M+</div>
+        </div>
+      </div>
+
+      <!-- Nível Miles -->
+      <div class="level-card">
+        <div class="level-header">
+          <div class="level-avatar" style="background:#a78bfa22; font-size:20px;">🕷️</div>
+          <div>
+            <div class="level-game">Spider-Man: Miles Morales</div>
+            <div class="level-rank">Herói do Bairro</div>
+          </div>
+        </div>
+        <div class="xp-bar-wrap">
+          <div class="xp-labels">
+            <span>55% concluído</span>
+            <span style="color: #a78bfa;">Em progresso</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill fill-miles" style="width: 55%"></div>
+          </div>
+        </div>
+        <div class="level-badges">
+          <div class="level-badge">⚖️ Justiça Suprema</div>
+          <div class="level-badge">🏘️ Harlem protegido</div>
+          <div class="level-badge">🗺️ Caçador ativo</div>
+        </div>
+      </div>
+
+      <!-- Nível TLOU -->
+      <div class="level-card">
+        <div class="level-header">
+          <div class="level-avatar" style="background:#3da85a22; font-size:20px;">🌿</div>
+          <div>
+            <div class="level-game">The Last of Us</div>
+            <div class="level-rank">Sobrevivente</div>
+          </div>
+        </div>
+        <div class="xp-bar-wrap">
+          <div class="xp-labels">
+            <span>35% concluído</span>
+            <span style="color: #3da85a;">Sábados à tarde</span>
+          </div>
+          <div class="xp-bar">
+            <div class="xp-fill fill-tlou" style="width: 35%"></div>
+          </div>
+        </div>
+        <div class="level-badges">
+          <div class="level-badge">🌿 It Can't Be for Nothing</div>
+          <div class="level-badge">🧟 Sobrevivendo</div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- SOBRE -->
+  <section id="sobre" style="border-top: 0.5px solid var(--border); text-align: center; padding: 48px 32px;">
+    <div class="section-eyebrow">Stack técnica</div>
+    <div class="section-title">Como foi construído</div>
+    <p style="color: var(--muted); max-width: 500px; margin: 0 auto 24px; font-size: 14px;">
+      Este projeto é parte de um portfólio de desenvolvimento frontend, demonstrando o uso de múltiplos frameworks e tecnologias modernas.
+    </p>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    feito com 🎮 por <span>Gabriela</span> · <a href="https://github.com/Mgrsantos" style="color: var(--purple); text-decoration: none;">github.com/Mgrsantos</a>
+  </footer>
+
+  <script>
+    function toggleDropdown() {
+      const btn = document.getElementById('nav-btn');
+      const menu = document.getElementById('dropdown-menu');
+      const isOpen = menu.classList.contains('open');
+      if (isOpen) {
+        menu.classList.remove('open');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+      } else {
+        menu.classList.add('open');
+        btn.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    function closeDropdown() {
+      const btn = document.getElementById('nav-btn');
+      const menu = document.getElementById('dropdown-menu');
+      menu.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    document.addEventListener('click', function(e) {
+      const dropdown = document.querySelector('.nav-dropdown');
+      if (!dropdown.contains(e.target)) closeDropdown();
+    });
+
+    function toggleDetail(id) {
+      const card = document.getElementById('card-' + id);
+      const panel = document.getElementById('detail-' + id);
+      const isOpen = panel.classList.contains('open');
+
+      document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('open'));
+      document.querySelectorAll('.game-card').forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        panel.classList.add('open');
+        card.classList.add('active');
+        card.setAttribute('aria-expanded', 'true');
+        setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+      }
+    }
+  </script>
+
+</body>
+</html>
