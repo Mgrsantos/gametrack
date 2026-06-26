@@ -21,7 +21,7 @@ O projeto **se atualiza toda vez que jogo** e alcanço algo novo: uma missão co
 
 | Jogo | Gênero | Horas | Progresso | Status |
 |------|--------|-------|-----------|--------|
-| GTA V Online | Mundo aberto | 620h | 78% | 🟢 Jogando  |
+| GTA V Legacy Online | Mundo aberto | 620h | 78% | 🟢 Jogando  |
 | Spider-Man: Miles Morales | Ação / Aventura | 142h | 55% | 🟢 Jogando |
 | The Last of Us | Survival / Drama | 85h | 35% | 🟢 Jogando |
 | The Sims 4 | Simulação | — | — | 🟡 Em Andamento |
