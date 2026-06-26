@@ -1,6 +1,6 @@
 # 🎮 GameTrack
 
-> Minha biblioteca pessoal de jogos — atualizada a cada conquista, missão concluída e hora jogada.
+> Minha biblioteca pessoal de jogos atualizada a cada conquista, missão concluída e hora jogada.
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
@@ -11,9 +11,9 @@
 
 ## 📖 Sobre o projeto
 
-O **GameTrack** é uma landing page pessoal que reúne todos os jogos que faço parte da minha rotina — com progresso real, horas jogadas, missões em andamento e conquistas desbloqueadas.
+O **GameTrack** é uma landing page pessoal que reúne todos os jogos que faz  parte da minha rotina, com progresso real, horas jogadas, missões em andamento e conquistas desbloqueadas.
 
-O projeto **se atualiza toda vez que jogo** e alcanço algo novo: uma missão concluída, um nível atingido, uma nova conquista. Nada de dados genéricos — tudo aqui é do meu jeito e da minha rotina como jogadora.
+O projeto **se atualiza toda vez que jogo** e alcanço algo novo: uma missão concluída, um nível atingido, uma nova conquista. Nada de dados genéricos, tudo aqui é do meu jeito e da minha rotina como jogadora.
 
 ---
 
