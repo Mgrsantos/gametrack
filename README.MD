@@ -119,5 +119,3 @@ Feito por **Gabriela** — desenvolvedora frontend Pleno com experiência em Ang
 - 💼 Aberta a oportunidades CLT
 
 ---
-
-*Última atualização: junho de 2026 · próxima: assim que terminar "It Can't Be for Nothing" 🌿*
