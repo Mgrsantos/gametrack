@@ -21,12 +21,12 @@ O projeto **se atualiza toda vez que jogo** e alcanço algo novo: uma missão co
 
 | Jogo | Gênero | Horas | Progresso | Status |
 |------|--------|-------|-----------|--------|
-| GTA V Online | Mundo aberto | 620h | 78% | 🟡 Em andamento |
-| Spider-Man: Miles Morales | Ação / Aventura | 142h | 55% | 🟡 Em andamento |
-| The Last of Us | Survival / Drama | 85h | 35% | 🟡 Em andamento |
-| The Sims 4 | Simulação | — | — | 🟢 Jogando |
-| Fortnite | Battle Royale | — | — | 🟢 Jogando |
-| LEGO Batman | Aventura / Plataforma | — | — | 🟢 Jogando |
+| GTA V Online | Mundo aberto | 620h | 78% | 🟢 Jogando  |
+| Spider-Man: Miles Morales | Ação / Aventura | 142h | 55% | 🟢 Jogando |
+| The Last of Us | Survival / Drama | 85h | 35% | 🟢 Jogando |
+| The Sims 4 | Simulação | — | — | 🟡 Em Andamento |
+| Fortnite | Battle Royale | — | — |🟡  Em Andamento |
+| LEGO Batman | Aventura / Plataforma | — | — | 🟡 Em Andamento |
 
 ---
 
